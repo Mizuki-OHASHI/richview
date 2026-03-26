@@ -65,7 +65,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 return
             }
 
-            appState.rawText = selectedText
+            appState.rawText = AppDelegate.dedent(selectedText)
             appState.cleanedText = ""
             appState.phase = useLLM ? .processing : .rendered
 
@@ -79,6 +79,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 appState.cleanedText = selectedText
             }
         }
+    }
+
+    /// Remove common leading whitespace from all lines (like Python's textwrap.dedent).
+    private static func dedent(_ text: String) -> String {
+        let lines = text.split(separator: "\n", omittingEmptySubsequences: false).map(String.init)
+        let minIndent = lines
+            .filter { !$0.trimmingCharacters(in: .whitespaces).isEmpty }
+            .map { $0.prefix(while: { $0 == " " || $0 == "\t" }).count }
+            .min() ?? 0
+        guard minIndent > 0 else { return text }
+        return lines.map { line in
+            line.count >= minIndent ? String(line.dropFirst(minIndent)) : line
+        }.joined(separator: "\n")
     }
 
     private func requestLLMCleanup() {
