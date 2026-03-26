@@ -149,6 +149,24 @@
             text = text.replace(/^```(?:latex|tex|math)?\s*\n?([\s\S]*?)\n?\s*```\s*$/g, '$1');
             text = text.replace(/```(?:latex|tex|math)\s*\n([\s\S]*?)\n\s*```/g, '$1');
 
+            // Unwrap \text{...} outside math environments
+            // LLM sometimes wraps plain text in \text{}, which is only valid inside math mode.
+            // Strategy: extract math regions first, strip \text{} from non-math parts, restore.
+            {
+                const mathRegions = [];
+                let tmp = text;
+                // Protect math environments from modification
+                tmp = tmp.replace(/(\\\[[\s\S]*?\\\]|\$\$[\s\S]*?\$\$|\\\([\s\S]*?\\\)|\$[^\$\n]+?\$)/g, (m) => {
+                    mathRegions.push(m);
+                    return '\x00MATH' + (mathRegions.length - 1) + '\x00';
+                });
+                // Strip \text{...} in non-math parts (brace-balanced)
+                tmp = tmp.replace(/\\text\{([^}]*)\}/g, '$1');
+                // Restore math regions
+                tmp = tmp.replace(/\x00MATH(\d+)\x00/g, (_, i) => mathRegions[parseInt(i)]);
+                text = tmp;
+            }
+
             const el = document.getElementById('content');
 
             // Protect math from Markdown parser

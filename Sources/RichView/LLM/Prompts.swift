@@ -10,8 +10,7 @@ enum LaTeXPrompts {
     - Restore delimiters: \\( \\) for inline math, \\[ \\] for display math.
     - Restore backslashes: frac → \\frac, sqrt → \\sqrt, sum → \\sum, alpha → \\alpha, etc.
     - Fix braces for superscripts/subscripts.
-    - Do NOT wrap non-math text in \\text{} or math environments.
-    - Do NOT restructure lists, paragraphs, or headings.
+    - Leave non-math text exactly as-is. Do not restructure or reformat it.
     - Do NOT wrap output in code fences.
     - Output the corrected text only.
     """
