@@ -80,8 +80,8 @@ private func hotkeyCallback(
         return nil // consume the event
     }
 
-    // Cmd+Shift+D (D = keycode 2): direct render without LLM
-    if keyCode == 2 && hasCmd && hasShift && !hasCtrl && !hasOpt {
+    // Cmd+Shift+E (E = keycode 14): direct render without LLM
+    if keyCode == 14 && hasCmd && hasShift && !hasCtrl && !hasOpt {
         DispatchQueue.main.async { manager.onHotkeyWithoutLLM?() }
         return nil
     }

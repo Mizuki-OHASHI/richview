@@ -8,7 +8,7 @@ struct MenuBarView: View {
             Text("Cmd+Shift+R — Render with LLM")
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Text("Cmd+Shift+D — Render directly")
+            Text("Cmd+Shift+E — Render directly")
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
